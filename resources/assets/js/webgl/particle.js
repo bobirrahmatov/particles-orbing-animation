@@ -28,8 +28,6 @@ export default class Particle {
     this.fogCurrentColor = { value: null };
     this.fogColorPallet = {
       x: '#0099ff',
-      y: '#ff00a6',
-      z: '#ffcd00',
     };
     this.fogCurrentColor.value = this.fogColorPallet.x;
 
@@ -194,89 +192,32 @@ export default class Particle {
     this._setBloom();
     this._setDiffuse();
 
-    switch (number) {
-      case 0:
-        gsap.to(this.mesh.material.uniforms.u_switch_01, {
-          duration: this.duration,
-          ease: this.ease,
-          value: 1.0
-        });
-        gsap.to(this.mesh.material.uniforms.u_switch_02, {
-          duration: this.duration,
-          ease: this.ease,
-          value: 0.0
-        });
-        gsap.to(this.mesh.material.uniforms.u_switch_03, {
-          duration: this.duration,
-          ease: this.ease,
-          value: 0.0
-        });
-        gsap.to(this.currentColor, {
-          duration: this.duration,
-          ease: 'power2.inOut',
-          value: this.colorPallet.x,
-        });
-        gsap.to(this.fogCurrentColor, {
-          duration: this.duration,
-          ease: 'power2.inOut',
-          value: this.fogColorPallet.x,
-        });
-        break;
-      case 1:
-        gsap.to(this.mesh.material.uniforms.u_switch_01, {
-          duration: this.duration,
-          ease: this.ease,
-          value: 0.0
-        });
-        gsap.to(this.mesh.material.uniforms.u_switch_02, {
-          duration: this.duration,
-          ease: this.ease,
-          value: 1.0
-        });
-        gsap.to(this.mesh.material.uniforms.u_switch_03, {
-          duration: this.duration,
-          ease: this.ease,
-          value: 0.0
-        });
-        gsap.to(this.currentColor, {
-          duration: this.duration,
-          ease: 'power2.inOut',
-          value: this.colorPallet.y,
-        });
-        gsap.to(this.fogCurrentColor, {
-          duration: this.duration,
-          ease: 'power2.inOut',
-          value: this.fogColorPallet.y,
-        });
-        break;
-      case 2:
-        gsap.to(this.mesh.material.uniforms.u_switch_01, {
-          duration: this.duration,
-          ease: this.ease,
-          value: 0.0
-        });
-        gsap.to(this.mesh.material.uniforms.u_switch_02, {
-          duration: this.duration,
-          ease: this.ease,
-          value: 0.0
-        });
-        gsap.to(this.mesh.material.uniforms.u_switch_03, {
-          duration: this.duration,
-          ease: this.ease,
-          value: 1.0
-        });
-        gsap.to(this.currentColor, {
-          duration: this.duration,
-          ease: 'power2.inOut',
-          value: this.colorPallet.z,
-        });
-        gsap.to(this.fogCurrentColor, {
-          duration: this.duration,
-          ease: 'power2.inOut',
-          value: this.fogColorPallet.z,
-        });
-        break;
-    }
+    // Always use fog 1 only
+    gsap.to(this.mesh.material.uniforms.u_switch_01, {
+      duration: this.duration,
+      ease: this.ease,
+      value: 1.0
+    });
+    gsap.to(this.mesh.material.uniforms.u_switch_02, {
+      duration: this.duration,
+      ease: this.ease,
+      value: 0.0
+    });
+    gsap.to(this.mesh.material.uniforms.u_switch_03, {
+      duration: this.duration,
+      ease: this.ease,
+      value: 0.0
+    });
+    gsap.to(this.currentColor, {
+      duration: this.duration,
+      ease: 'power2.inOut',
+      value: this.colorPallet.x,
+    });
+    gsap.to(this.fogCurrentColor, {
+      duration: this.duration,
+      ease: 'power2.inOut',
+      value: this.fogColorPallet.x,
+    });
   }
 
   _setGui() {
@@ -284,8 +225,6 @@ export default class Particle {
       fogStart: this.fogStart,
       fogEnd: this.fogEnd,
       fogColor01: this.fogColorPallet.x,
-      fogColor02: this.fogColorPallet.y,
-      fogColor03: this.fogColorPallet.z,
       duration: this.duration,
       particleMoveSpeed: this.particleMoveSpeed,
       particleRange: this.particleRange,
@@ -315,16 +254,7 @@ export default class Particle {
       .name("fog color 1")
       .onChange((value) => {
         this.fogColorPallet.x = value;
-      });
-    gui.addColor(parameter, "fogColor02")
-      .name("fog color 2")
-      .onChange((value) => {
-        this.fogColorPallet.y = value;
-      });
-    gui.addColor(parameter, "fogColor03")
-      .name("fog color 3")
-      .onChange((value) => {
-        this.fogColorPallet.z = value;
+        this.fogCurrentColor.value = value;
       });
     gui.add(parameter, "duration", 1.0, 5.0, 0.01)
       .name("particleDuration")
@@ -412,20 +342,9 @@ export default class Particle {
     this.group.rotation.y += this.rotationPowerObj.value;
 
     if (!this.isAnimation) {
-      switch (number) {
-        case 0:
-          this.currentColor.value = this.colorPallet.x;
-          this.fogCurrentColor.value = this.fogColorPallet.x;
-          break;
-        case 1:
-          this.currentColor.value = this.colorPallet.y;
-          this.fogCurrentColor.value = this.fogColorPallet.y;
-          break;
-        case 2:
-          this.currentColor.value = this.colorPallet.z;
-          this.fogCurrentColor.value = this.fogColorPallet.z;
-          break;
-      }
+      // Always use fog 1 only
+      this.currentColor.value = this.colorPallet.x;
+      this.fogCurrentColor.value = this.fogColorPallet.x;
     }
     this.mesh.material.uniforms.fogColor.value = new THREE.Color(this.fogCurrentColor.value);
   }
