@@ -255,6 +255,8 @@ export default class Particle {
       .onChange((value) => {
         this.fogColorPallet.x = value;
         this.fogCurrentColor.value = value;
+        // Always ensure fog color is set correctly
+        this.mesh.material.uniforms.fogColor.value = new THREE.Color(value);
       });
     gui.add(parameter, "duration", 1.0, 5.0, 0.01)
       .name("particleDuration")
@@ -342,10 +344,12 @@ export default class Particle {
     this.group.rotation.y += this.rotationPowerObj.value;
 
     if (!this.isAnimation) {
-      // Always use fog 1 only
+      // Always use fog 1 only - ensure it never changes
       this.currentColor.value = this.colorPallet.x;
       this.fogCurrentColor.value = this.fogColorPallet.x;
     }
+    // Always ensure fog color is fog 1 (blue) - never allow fog 2 or fog 3
+    this.fogCurrentColor.value = this.fogColorPallet.x;
     this.mesh.material.uniforms.fogColor.value = new THREE.Color(this.fogCurrentColor.value);
   }
 
