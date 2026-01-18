@@ -17,7 +17,7 @@ const slider = new Slider({
 
 const _raf = () => {
     particleStage.onRaf();
-    particle.onRaf(slider.activeIndex);
+    particle.onRaf();
 };
 
 gsap.ticker.add(_raf);
@@ -28,7 +28,7 @@ window.addEventListener('load', () => {
 });
 
 slider.on('change',() =>{
-  particle._setLoop(slider.activeIndex)
+  particle._setLoop()
 })
 
 window.addEventListener("resize", () => {

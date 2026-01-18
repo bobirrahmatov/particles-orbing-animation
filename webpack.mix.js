@@ -115,7 +115,19 @@ mix
         process.env.NODE_ENV === 'production'
           ? id
           : basePath + filePath + id,
-
+      safeInclude: (filePath) => {
+        try {
+          const fs = require('fs');
+          const path = require('path');
+          const fullPath = path.join(process.cwd(), distRelativePath, 'assets', 'svg', 'sprite.svg');
+          if (fs.existsSync(fullPath)) {
+            return fs.readFileSync(fullPath, 'utf8');
+          }
+          return '';
+        } catch (e) {
+          return '';
+        }
+      },
       URL: {
         HOME: HOME_URL,
       },

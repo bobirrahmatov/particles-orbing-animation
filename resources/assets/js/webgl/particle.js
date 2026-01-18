@@ -187,7 +187,7 @@ export default class Particle {
     });
   }
 
-  _setLoop(number) {
+  _setLoop() {
     this._disable();
     this._setBloom();
     this._setDiffuse();
@@ -331,7 +331,7 @@ export default class Particle {
     }, this.duration * 1000);
   }
 
-  _render(number) {
+  _render() {
     this._canvasTextureUpdate();
     this.texture.needsUpdate = true;
     this.UnrealBloomPass.radius = this.bloom.radius;
@@ -370,7 +370,7 @@ export default class Particle {
     });
   }
 
-  onRaf(number) {
-    this._render(number);
+  onRaf() {
+    this._render();
   }
 }
