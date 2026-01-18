@@ -34,8 +34,6 @@ export default class Particle {
     this.currentColor = { value: null };
     this.colorPallet = {
       x: '#2dabff',
-      y: '#ff5ac6',
-      z: '#ffe88e',
     };
     this.currentColor.value = this.colorPallet.x;
 
@@ -234,9 +232,7 @@ export default class Particle {
       bloomStrength: this.bloom.strengh,
       bloomRadius: this.bloom.radius,
       bloomThreshold: this.bloom.threshold,
-      colorPalletPink: this.colorPallet.x,
-      colorPalletGreen: this.colorPallet.y,
-      colorPalletBlue: this.colorPallet.z,
+      colorPallet1: this.colorPallet.x,
       bgColor: this.stage.renderParam.clearColor,
     };
     const gui = new dat.GUI();
@@ -303,20 +299,10 @@ export default class Particle {
       .onChange((value) => {
         this.bloom.threshold = value;
       });
-    gui.addColor(parameter, "colorPalletPink")
-      .name("color pallet 1")
+    gui.addColor(parameter, "colorPallet1")
+      .name("particle color")
       .onChange((value) => {
         this.colorPallet.x = value;
-      });
-    gui.addColor(parameter, "colorPalletGreen")
-      .name("color pallet 2")
-      .onChange((value) => {
-        this.colorPallet.y = value;
-      });
-    gui.addColor(parameter, "colorPalletBlue")
-      .name("color pallet 3")
-      .onChange((value) => {
-        this.colorPallet.z = value;
       });
     gui.addColor(parameter, "bgColor")
       .name("bg color")
@@ -344,11 +330,12 @@ export default class Particle {
     this.group.rotation.y += this.rotationPowerObj.value;
 
     if (!this.isAnimation) {
-      // Always use fog 1 only - ensure it never changes
+      // Always use fog 1 and color 1 only - ensure they never change
       this.currentColor.value = this.colorPallet.x;
       this.fogCurrentColor.value = this.fogColorPallet.x;
     }
-    // Always ensure fog color is fog 1 (blue) - never allow fog 2 or fog 3
+    // Always ensure both colors are set to their x values - never allow color 2, 3, fog 2, or fog 3
+    this.currentColor.value = this.colorPallet.x;
     this.fogCurrentColor.value = this.fogColorPallet.x;
     this.mesh.material.uniforms.fogColor.value = new THREE.Color(this.fogCurrentColor.value);
   }
